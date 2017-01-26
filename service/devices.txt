@@ -1,0 +1,1 @@
+[{"id":"0","name":"Wasserkocher","min":"1700","max":"1900"},{"id":3,"name":"Kaffeemaschine","min":"700","max":"800"}]

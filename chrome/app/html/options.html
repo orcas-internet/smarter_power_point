@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>orcas Smarter Power Point Extension Einstellungen</title>
+    <link rel="stylesheet" type="text/css" href="../css/options.css">
+</head>
+<body>
+
+<label for="input-url" class="block_title">Server</label>
+<div class="block">
+    <input type="text" id="input-url" value="" style="width: 200px;" placeholder="http://server:80">
+</div>
+
+<label class="block_title">Benachrichtigungen</label>
+<div class="block">
+    <label for="coffee-option" title="Kaffeemaschine">Kaffeemaschine</label>
+    <select id="coffee-option" style="width: 200px;">
+        <option value="0">Keine</option>
+        <option value="1">Start</option>
+        <option value="2">Fertig</option>
+        <option value="3">Start + Fertig</option>
+    </select>
+    <label for="water-option" title="Wasserkocher">Wasserkocher</label>
+    <select id="water-option" style="width: 200px;">
+        <option value="0">Keine</option>
+        <option value="1">Start</option>
+        <option value="2">Fertig</option>
+        <option value="3">Start + Fertig</option>
+    </select>
+</div>
+
+<label class="block_title">Status</label>
+<div class="block" id="state">
+    <ul>
+        <li>Aktualisierung: <span id="time"></span></li>
+        <li>Energielevel: <span id="energyLevel"></span></li>
+        <li>Leistung: <span id="power"></span></li>
+        <li>Geräte: <span id="devices"></span></li>
+    </ul>
+</div>
+
+<div id="status" class="block"></div>
+
+<button id="save">Speichern</button>
+<button id="update">Aktualisieren</button>
+
+<div class="button-nav">
+    <button id="delDevBtn" class="toolBtn" title="Gerät löschen">-</button>
+    <button id="addDevBtn" class="toolBtn" title="Gerät hinzufügen">+</button>
+</div>
+<label class="block_title">Geräte</label>
+<div class="block" id="devs">
+</div>
+
+<label for="modifyDev" class="block_title">Gerät</label>
+<div class="block" id="modifyDev">
+    <input type="hidden" name="devId" id="devId" value="">
+    <label for="devName" title="Gerätename">Gerätename</label>
+    <input type="text" name="devName" id="devName" value="" size="10"><br>
+    <label for="minPower" title="minimale Leistung">min. Leistung</label>
+    <input type="number" name="minPower" id="minPower" value="" min="0" max="50000"> W<br>
+    <label for="maxPower" title="maximale Leistung">max. Leistung</label>
+    <input type="number" name="maxPower" id="maxPower" value="" min="0" max="50000"> W<br/>
+    <div class="button-nav">
+        <button id="cancelDevBtn">Abrechen</button>
+        <button id="saveDevBtn">Speichern</button>
+    </div>
+</div>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../js/options.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+.block {
+    border: 1px solid lightgrey;
+    padding: 15px;
+    position: relative;
+    width: 200px;
+}
+
+.block_title {
+    background-color: white;
+    color: darkgray;
+    left: 10px;
+    padding: 0 5px;
+    position: relative;
+    top: 8px;
+    z-index: 2;
+}
+
+#status {
+    background-color: lightgreen;
+    border: none;
+    color: black;
+    display: none;
+    margin-top: 5px;
+}
+
+#save {
+    margin-top: 5px;
+}
+
+#state ul {
+    list-style-type: none;
+    margin-bottom: 0;
+    margin-left: -40px;
+    margin-top: 0;
+}
+
+#devs {
+    .row {
+        display: inline-table;
+        width: 100%;
+    }
+    .id {
+        display: none;
+    }
+    .name, .min, .max {
+        display: table-cell;
+        padding: 0 5px 0 0;
+        text-align: right;
+        width: 25%;
+    }
+    .name {
+        text-align: left;
+        width: 50%;
+    }
+    .active {
+        background-color: cornflowerblue;
+    }
+}
+
+.button-nav {
+    display: inline-table;
+}
+
+label[for="modifyDev"] {
+    display: none;
+}
+#modifyDev {
+    display: none;
+    input {
+        margin-bottom: 5px;
+    }
+    label {
+        width: 80px;
+        display: inline-block;
+    }
+}

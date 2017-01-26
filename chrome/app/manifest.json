@@ -1,0 +1,30 @@
+{
+    "name": "orcas Smarter Power Point",
+    "version": "1.0",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_icon": {
+            "16": "img/kitchen-16.png"
+        },
+        "default_popup": "html/options.html"
+    },
+    "app": {
+        "background": {
+            "scripts": [
+                "js/background.js"
+            ]
+        }
+    },
+    "permissions": [
+        "notifications",
+        "alarms",
+        "storage",
+        "http://127.0.0.1:80/",
+        "activeTab",
+        "https://ajax.googleapis.com/"
+    ],
+    "icons": {
+        "16": "img/kitchen-16.png",
+        "128": "img/kitchen-128.png"
+    }
+}
