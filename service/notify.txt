@@ -1,1 +1,0 @@
-{"time":1485443691780,"energyLevel":0,"valid":true,"power":"0","level":0}

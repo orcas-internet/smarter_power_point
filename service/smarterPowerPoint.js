@@ -1,7 +1,9 @@
-var host = '10.149.2.100';
-var user = 'configurator';
-var pass = 'Z8F984nN';
-var delay = 10000;
+/**
+ * smarter power point
+ * @author: info@orcas.de
+ */
+
+var config = require('./config');
 
 var fs = require('fs');
 
@@ -108,8 +110,8 @@ var cron = require('node-cron');
 cron.schedule('*/10 * * * * *', function () {
     var fritz = require('smartfritz');
 
-    var moreParam = {url: host};
-    fritz.getSessionID(user, pass, function (sid) {
+    var moreParam = {url: config.host};
+    fritz.getSessionID(config.user, config.pass, function (sid) {
         fritz.getSwitchList(sid, function (listinfos) {
             fritz.getSwitchPower(sid, listinfos, function (sid) {
                 if(fs.existsSync('notify.txt')) {
@@ -121,7 +123,7 @@ cron.schedule('*/10 * * * * *', function () {
                     var element = energyLevel[index];
                     if (element.energy.min <= sid && element.energy.max >= sid) {
                         var timeIns = Date.now();
-                        if(lastNotification.time > 0 && timeIns > lastNotification.time+delay) {
+                        if(lastNotification.time > 0 && timeIns > lastNotification.time + config.delay) {
                             if(lastNotification.level == index) {
                                 result = element.run;
                                 lastNotification.valid = true;
