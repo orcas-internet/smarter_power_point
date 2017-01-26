@@ -76,3 +76,6 @@ crashlytics-build.properties
 fabric.properties
 
 service/config.js
+service/notify.txt
+service/state.txt
+service/devices.txt

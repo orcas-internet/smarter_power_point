@@ -47,4 +47,29 @@ Network notification for coffee machines and electric kettle using AVM Fritz!DEC
 
       projects/smarter_power_point/chrome/app
 
-- configure extensions
+- configure extensions by click on the extension icon
+
+- insert url to the configured web server
+
+      http://127.0.0.1:8003
+      
+- click on "Update" to check connection to service. Under state should be the current date
+
+- click on "+" to add device, which should be connected to power point e.g.
+
+      name: coffee machine // name of machine
+      min:  700            // minimum elektric power, if machine is on
+      max:  800            // maximum elektric power, if machine is on
+      
+- click on "save"
+
+- click on "Update", the setting for "coffee machine" should be appear under "Notifications"
+
+- change settings for coffee machine
+
+      none // if no notification should be displayed
+      start // if notification should be displayed only if the machine is start
+      finished // if notification should be displayed only if the machine is finished
+      start+finished // if notification should be displayed if the machine is start and finished
+      
+- click on "Save"

@@ -58,7 +58,7 @@ function getDevices(e) {
             var options = JSON.parse(CONFIG.options);
             for (var i=0, ni=ids.length; i < ni; i++) {
                 var id = ids[i];
-                $('#option' + id)[0].selectedIndex = options[id];
+                $('#option' + id).val(options[id]);
             }
         }
     }
@@ -77,7 +77,7 @@ function saveDevice() {
             for(var d = 0, n = DEVICES.length; d < n; d++) {
                 dev = DEVICES[d];
                 if(dev != null) {
-                    if(dev.id == id) {
+                    if(id != "" && dev.id == id) {
                         break;
                     } else {
                         nMaxId = Math.max(nMaxId, dev.id);

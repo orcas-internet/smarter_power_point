@@ -32,6 +32,10 @@
     margin-bottom: 0;
     margin-left: -40px;
     margin-top: 0;
+    label {
+        display: inline-block;
+        width: 80px;
+    }
 }
 
 #devs {
@@ -70,7 +74,7 @@ label[for="modifyDev"] {
         margin-bottom: 5px;
     }
     label {
-        width: 80px;
         display: inline-block;
+        width: 80px;
     }
 }
