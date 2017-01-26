@@ -1,6 +1,7 @@
 $ = jQuery.noConflict();
 
 var DEVICES = [];
+var CONFIG = null;
 
 function send(aUrl, aCallBack, aData) {
     if(aUrl.length != 0) {
@@ -21,6 +22,7 @@ function getDevices(e) {
     if(devices !== null && typeof devices === 'object') {
         DEVICES = devices;
         var list = "";
+        var notifications = "";
         for(var d = 0, n = DEVICES.length; d < n; d++) {
             var dev = DEVICES[d];
             if(dev != null) {
@@ -30,6 +32,14 @@ function getDevices(e) {
                 list += "<div class='cell min'>" + dev.min + "</div>";
                 list += "<div class='cell max'>" + dev.max + "</div>";
                 list += "</div>";
+
+                notifications += "<label for=\"option" + dev.id + "\">" + dev.name + "</label>";
+                notifications += "<select id=\"option" + dev.id + "\" style=\"width: 200px;\">";
+                notifications += "<option value=\"0\">Keine</option>";
+                notifications += "<option value=\"1\">Start</option>";
+                notifications += "<option value=\"2\">Fertig</option>";
+                notifications += "<option value=\"3\">Start + Fertig</option>";
+                notifications += "</select>";
             } else {
                 DEVICES.splice(d, 1);
                 d--;
@@ -41,7 +51,16 @@ function getDevices(e) {
             $(this).parent().addClass('active');
             addDevice();
         });
-
+        $('#notifications').empty().append(notifications);
+        if (CONFIG != null) {
+            $('#input-url').val(CONFIG.url);
+            var ids = CONFIG.ids.split(",");
+            var options = JSON.parse(CONFIG.options);
+            for (var i=0, ni=ids.length; i < ni; i++) {
+                var id = ids[i];
+                $('#option' + id)[0].selectedIndex = options[id];
+            }
+        }
     }
 }
 
@@ -157,29 +176,32 @@ function readState(e) {
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
-        coffee: 'coffee',
-        water: 'water',
-        url: 'http://127.0.0.1:8003'
-    }, function(items) {
-        console.log(items);
-        document.getElementById('coffee-option').selectedIndex = items.coffee;
-        document.getElementById('water-option').selectedIndex = items.water;
-        document.getElementById('input-url').value = items.url;
-        send(items.url + '/coffee-time.php?get=all', readState);
-        send(items.url + '/coffee-time.php?get=devices', getDevices);
+        ids: '',
+        options: '',
+        url: ''
+    }, function(config) {
+        console.log(config);
+        CONFIG = config;
+        send(config.url + '/coffee-time.php?get=all', readState);
+        send(config.url + '/coffee-time.php?get=devices', getDevices);
     });
 }
 
 // Saves options to chrome.storage.sync.
 function save_options() {
-    var water = document.getElementById('water-option').selectedIndex;
-    var coffee = document.getElementById('coffee-option').selectedIndex;
-    var urlS = document.getElementById('input-url').value;
-    chrome.storage.sync.set({
-        water: water,
-        coffee: coffee,
-        url: urlS
-    }, function() {
+    var data = {};
+    var ids = [];
+    var options = [];
+    $('#notifications select').each(function() {
+        var option = $(this).attr('id');
+        var id = option.substr(6);
+        ids.push(id);
+        options[id + ""] = $(this)[0].selectedIndex;
+    });
+    data['ids'] = ids.join(",");
+    data['options'] = JSON.stringify(options);
+    data['url'] = $('#input-url').val();
+    chrome.storage.sync.set(data, function() {
         // Update status to let user know options were saved.
         var status = document.getElementById('status');
         status.style.display = "block";
@@ -192,9 +214,9 @@ function save_options() {
 }
 
 $(document).ready(function() {
-    document.addEventListener('DOMContentLoaded', restore_options);
-    document.getElementById('save').addEventListener('click', save_options);
-    document.getElementById('update').addEventListener('click', restore_options);
+    restore_options();
+    $('#saveBtn').on('click', save_options);
+    $('#updateBtn').on('click', restore_options);
     $('#addDevBtn').on('click', addDevice);
     $('#delDevBtn').on('click', delDevice);
     $('#saveDevBtn').on('click', saveDevice);
