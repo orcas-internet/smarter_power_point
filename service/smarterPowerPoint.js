@@ -131,7 +131,7 @@ cron.schedule('*/10 * * * * *', function () {
                         }
                         lastNotification.level = index;
                         lastNotification.time = timeIns;
-                        lastNotification.power = 1730000;
+                        lastNotification.power = sid;
                         break;
                     }
                 }
