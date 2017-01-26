@@ -1,8 +1,8 @@
 {
-  "name": "smartpowerpoint",
+  "name": "smarterpowerpoint",
   "version": "1.0.0",
   "description": "service to request power levels from AVM FRITZ!DECT 200",
-  "main": "smartPowerPoint.js",
+  "main": "smarterPowerPoint.js",
   "scripts": {
     "test": "test"
   },
