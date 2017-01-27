@@ -138,7 +138,7 @@ cron.schedule('*/10 * * * * *', function () {
                     }
                 }
                 fs.writeFile('notify.txt', JSON.stringify(lastNotification), function (err) {});
-                if (result || lastNotification.valid) {
+                if (result && lastNotification.valid) {
                     fs.writeFile('state.txt', JSON.stringify(result), function (err) {});
                 }
             }, moreParam);

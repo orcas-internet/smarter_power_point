@@ -5,7 +5,6 @@ var powerPoint = {
 var running = [];
 
 Array.prototype.diff = function(a) {
-    if(a == null) return [];
     return this.filter(function(i) {
         return a.indexOf(i) < 0;
     });
