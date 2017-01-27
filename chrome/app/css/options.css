@@ -35,14 +35,14 @@
 #devs .row {
   display: inline-table;
   width: 100%; }
-#devs .id {
+#devs .devId, #devs .devImg, #devs .devStartText, #devs .devStartSound, #devs .devEndText, #devs .devEndSound {
   display: none; }
-#devs .name, #devs .min, #devs .max {
+#devs .devName, #devs .devMin, #devs .devMax {
   display: table-cell;
   padding: 0 5px 0 0;
   text-align: right;
   width: 25%; }
-#devs .name {
+#devs .devName {
   text-align: left;
   width: 50%; }
 #devs .active {

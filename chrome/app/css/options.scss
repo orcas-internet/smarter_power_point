@@ -43,16 +43,16 @@
         display: inline-table;
         width: 100%;
     }
-    .id {
+    .devId, .devImg, .devStartText, .devStartSound, .devEndText, .devEndSound {
         display: none;
     }
-    .name, .min, .max {
+    .devName, .devMin, .devMax {
         display: table-cell;
         padding: 0 5px 0 0;
         text-align: right;
         width: 25%;
     }
-    .name {
+    .devName {
         text-align: left;
         width: 50%;
     }

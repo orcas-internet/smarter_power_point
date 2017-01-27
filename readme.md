@@ -1,6 +1,10 @@
 # smarter power point
 Network notification for coffee machines and electric kettle using AVM Fritz!DECT in smarthome. Not only useful for java developers.
 
+**We exclude any liability whatsoever for any damages whatsoever that this software may cause.**
+
+**Attention**: this is a very **unsecure implementation**. Use it only if you know what you do.
+
 ## install
 
 - clone repository

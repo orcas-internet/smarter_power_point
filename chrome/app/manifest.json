@@ -17,7 +17,7 @@
         "notifications",
         "alarms",
         "storage",
-        "http://127.0.0.1:80/",
+        "http://*/",
         "activeTab",
         "https://ajax.googleapis.com/"
     ],

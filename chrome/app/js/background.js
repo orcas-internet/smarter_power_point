@@ -1,61 +1,60 @@
-var running = [];
-var url = '';
-var data = {
-    Wasserkocher: {
-        state: 0,
-        img: 'img/water.jpg',
-        start: {
-            text: 'Wasser wurde aufgesetzt.',
-            sound: 'audio/start.mp3'
-        },
-        end: {
-            text: 'Wasserkocher ist fertig.',
-            sound: 'audio/finished.mp3'
-        }
-    },
-    Kaffemaschine: {
-        state: 0,
-        img: 'img/coffee.jpg',
-        start: {
-            text: 'Kaffe wurde aufgesetzt.',
-            sound: 'audio/start.mp3'
-        },
-        end: {
-            text: 'Kaffee ist fertig.',
-            sound: 'audio/finished.mp3'
-        }
-    }
+var powerPoint = {
+    devices: [],
+    config: null
 };
+var running = [];
 
-//start Coffee Check
-Array.prototype.diff = function (a) {
-    return this.filter(function (i) {
+Array.prototype.diff = function(a) {
+    if(a == null) return [];
+    return this.filter(function(i) {
         return a.indexOf(i) < 0;
     });
 };
 
+Array.prototype.find = function(name, value) {
+    return this.filter(function(item) {
+        var val = item[name];
+        return val == value;
+    });
+};
+
+function send(aUrl, aCallBack, aData) {
+    if(aUrl.length != 0) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", aUrl);
+        xmlhttp.onload = aCallBack;
+        xmlhttp.send(aData);
+    }
+}
+
 function checkCoffee() {
-    if(url.length == 0) {
+    if(powerPoint.url.length == 0) {
         window.setTimeout(checkCoffee, 1);
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url);
-    xmlhttp.onload = function (e) {
+    xmlhttp.open("POST", powerPoint.url);
+    xmlhttp.onload = function(e) {
         var response = JSON.parse(e.target.responseText);
 
         var diff = running.diff(response);
         var diff2 = response.diff(running);
 
-        for (var index = 0; index < diff.length; index++) {
-            var element = diff[index];
-            if(data[element].state == 2 || data[element].state == 3)
-                showNotification(element, data[element].end.text, data[element].end.sound);
-        }
+        if(powerPoint.devices.length > 0) {
+            for(var index = 0; index < diff.length; index++) {
+                var element = diff[index];
+                var dev = powerPoint.devices.find('name', element)[0];
+                if(dev.state == 2 || dev.state == 3) {
+                    showNotification(element, dev.endText, dev.endSound);
+                }
+            }
 
-        for (var index2 = 0; index2 < diff2.length; index2++) {
-            var element2 = diff2[index2];
-            if(data[element2].state == 1 || data[element2].state == 3)
-                showNotification(element2, data[element2].start.text, data[element2].start.sound);
+            for(var index2 = 0; index2 < diff2.length; index2++) {
+                var element2 = diff2[index2];
+                var dev2 = powerPoint.devices.find('name', element2)[0];
+                if(dev2.state == 1 || dev2.state == 3) {
+                    showNotification(element2, dev2.startText, dev2.startSound);
+                }
+            }
         }
 
         running = response;
@@ -66,7 +65,6 @@ function checkCoffee() {
 }
 
 function showNotification(element, text, sound) {
-    // Now create the notification
     if(sound) {
         var audio = new Audio();
         audio.src = sound;
@@ -74,37 +72,52 @@ function showNotification(element, text, sound) {
     }
     chrome.notifications.create('Küche', {
         type: 'basic',
-        iconUrl: data[element].img,
+        iconUrl: powerPoint.devices.find('name', element)[0].img,
         title: element,
         message: text
     });
 }
 
-chrome.app.runtime.onLaunched.addListener(function() {
-    chrome.app.window.create("html/options.html");
-});
+function getDevices(e) {
+    var devices = JSON.parse(e.target.responseText);
+    if(devices !== null && typeof devices === 'object') {
+        powerPoint.devices = devices;
+        if(powerPoint.config) {
+            var ids = powerPoint.config.ids.split(",");
+            var options = JSON.parse(powerPoint.config.options);
+            for (var i=0, n=ids.length; i < n; i++) {
+                var id = ids[i];
+                powerPoint.devices.find('id', id)[0]['state'] = options[id];
+            }
+        }
+    }
+}
 
 function restore_options() {
-    // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
-        coffee: '0',
-        water: '0',
-        url:''
-    }, function(items) {
-        data['Wasserkocher'].state = items.water;
-        data['Kaffemaschine'].state = items.coffee;
-        url = items.url + '/coffee-time.php';
+        ids: '',
+        options: '',
+        url: ''
+    }, function(config) {
+        powerPoint.config = config;
+        powerPoint.url = config.url + '/coffee-time.php';
+        send(config.url + '/coffee-time.php?get=devices', getDevices);
     });
 }
-//the starter
+
 chrome.storage.sync.get({
-    coffee: '0',
-    water: '0',
-    url:''
-}, function(items) {
-    data['Wasserkocher'].state = items.water;
-    data['Kaffemaschine'].state = items.coffee;
-    url = items.url + '/coffee-time.php';
+    ids: '',
+    options: '',
+    url: ''
+}, function(config) {
+    powerPoint.config = config;
+    powerPoint.url = config.url + '/coffee-time.php';
     checkCoffee();
     window.setInterval(restore_options, 5000);
 });
+
+if(chrome.app.runtime) {
+    chrome.app.runtime.onLaunched.addListener(function() {
+        chrome.app.window.create("html/options.html");
+    });
+}

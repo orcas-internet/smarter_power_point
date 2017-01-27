@@ -27,10 +27,15 @@ function getDevices(e) {
             var dev = DEVICES[d];
             if(dev != null) {
                 list += "<div class='row'>";
-                list += "<div class='cell id'>" + dev.id + "</div>";
-                list += "<div class='cell name'>" + dev.name + "</div>";
-                list += "<div class='cell min'>" + dev.min + "</div>";
-                list += "<div class='cell max'>" + dev.max + "</div>";
+                list += "<div class='cell devId'>" + dev.id + "</div>";
+                list += "<div class='cell devName'>" + dev.name + "</div>";
+                list += "<div class='cell devMin'>" + dev.min + "</div>";
+                list += "<div class='cell devMax'>" + dev.max + "</div>";
+                list += "<div class='cell devImg'>" + dev.img + "</div>";
+                list += "<div class='cell devStartText'>" + dev.startText + "</div>";
+                list += "<div class='cell devStartSound'>" + dev.startSound + "</div>";
+                list += "<div class='cell devEndText'>" + dev.endText + "</div>";
+                list += "<div class='cell devEndSound'>" + dev.endSound + "</div>";
                 list += "</div>";
 
                 notifications += "<label for=\"option" + dev.id + "\">" + dev.name + "</label>";
@@ -65,12 +70,9 @@ function getDevices(e) {
 }
 
 function saveDevice() {
-    var url = document.getElementById('input-url').value;
+    var url = $('#input-url').val();
     if(DEVICES !== null && typeof DEVICES === 'object') {
-        var id = document.getElementById('devId').value;
-        var name = document.getElementById('devName').value;
-        var min = document.getElementById('minPower').value;
-        var max = document.getElementById('maxPower').value;
+        var id = $('#devId').val();
         var dev = null;
         var nMaxId = -1;
         if(DEVICES.length > 0) {
@@ -92,9 +94,14 @@ function saveDevice() {
             id=0;
         }
         dev = {id: id};
-        dev['name'] = name;
-        dev['min'] = min;
-        dev['max'] = max;
+        dev['name'] = $('#devName').val();
+        dev['min'] = $('#devMin').val();
+        dev['max'] = $('#devMax').val();
+        dev['img'] = $('#devImg').val();
+        dev['startText'] = $('#devStartText').val();
+        dev['startSound'] = $('#devStartSound').val();
+        dev['endText'] = $('#devEndText').val();
+        dev['endSound'] = $('#devEndSound').val();
         DEVICES[id] = dev;
         var data = new FormData();
         var devices = [];
@@ -127,14 +134,24 @@ function addDevice(e) {
         $('#devs .row').removeClass('active');
         $('#devId').val("");
         $('#devName').val("");
-        $('#minPower').val("");
-        $('#maxPower').val("");
+        $('#devMin').val("");
+        $('#devMax').val("");
+        $('#devImg').val("");
+        $('#devStartText').val("");
+        $('#devStartSound').val("");
+        $('#devEndText').val("");
+        $('#devEndSound').val("");
     } else {
         $('#devs .active').each(function() {
-            $('#devId').val($(this).find('.id').text());
-            $('#devName').val($(this).find('.name').text());
-            $('#minPower').val($(this).find('.min').text());
-            $('#maxPower').val($(this).find('.max').text());
+            $('#devId').val($(this).find('.devId').text());
+            $('#devName').val($(this).find('.devName').text());
+            $('#devMin').val($(this).find('.devMin').text());
+            $('#devMax').val($(this).find('.devMax').text());
+            $('#devImg').val($(this).find('.devImg').text());
+            $('#devStartText').val($(this).find('.devStartText').text());
+            $('#devStartSound').val($(this).find('.devStartSound').text());
+            $('#devEndText').val($(this).find('.devEndText').text());
+            $('#devEndSound').val($(this).find('.devEndSound').text());
         });
     }
 }
@@ -172,9 +189,8 @@ function readState(e) {
     }
 }
 
-// Restores select box and checkbox state using the preferences stored in chrome.storage.
+// Restore options from chrome.storage.sync.
 function restore_options() {
-    // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
         ids: '',
         options: '',
