@@ -12,11 +12,7 @@ function send(aUrl, aCallBack, aData) {
     }
 }
 
-function receive(e) {
-    console.log(e.target.responseText);
-}
-
-function getDevices(e) {
+function updateDevices(e) {
     var url = document.getElementById('input-url').value;
     var devices = JSON.parse(e.target.responseText);
     if(devices !== null && typeof devices === 'object') {
@@ -113,7 +109,7 @@ function saveDevice() {
             }
         }
         data.append('devices', JSON.stringify(devices));
-        send(url + '/coffee-time.php?set=devices', 'getDevices', data);
+        send(url + '/coffee-time.php?set=devices', 'updateDevices', data);
         hideDevice();
     }
 }
@@ -166,7 +162,7 @@ function delDevice() {
                 DEVICES.splice(d, 1);
                 var data = new FormData();
                 data.append('devices', JSON.stringify(DEVICES));
-                send(url + '/coffee-time.php?set=devices', getDevices, data);
+                send(url + '/coffee-time.php?set=devices', updateDevices, data);
                 hideDevice();
                 break;
             }
@@ -174,7 +170,7 @@ function delDevice() {
     }
 }
 
-function readState(e) {
+function updateState(e) {
     var response = JSON.parse(e.target.responseText);
     if(response !== null) {
         if(typeof response === 'object') {
@@ -189,19 +185,6 @@ function readState(e) {
     }
 }
 
-// Restore options from chrome.storage.sync.
-function restore_options() {
-    chrome.storage.sync.get({
-        ids: '',
-        options: '',
-        url: ''
-    }, function(config) {
-        console.log(config);
-        CONFIG = config;
-        send(config.url + '/coffee-time.php?get=all', readState);
-        send(config.url + '/coffee-time.php?get=devices', getDevices);
-    });
-}
 
 // Saves options to chrome.storage.sync.
 function save_options() {
@@ -229,12 +212,27 @@ function save_options() {
     });
 }
 
+function restore_options(withDevices) {
+    chrome.storage.sync.get({
+        ids: '',
+        options: '',
+        url: ''
+    }, function(config) {
+        CONFIG = config;
+        send(config.url + '/coffee-time.php?get=all', updateState);
+        if(withDevices === true || withDevices.target != null) {
+            send(config.url + '/coffee-time.php?get=devices', updateDevices);
+        }
+    });
+    window.setTimeout(restore_options, 5000, false);
+}
+
 $(document).ready(function() {
-    restore_options();
-    $('#saveBtn').on('click', save_options);
-    $('#updateBtn').on('click', restore_options);
     $('#addDevBtn').on('click', addDevice);
     $('#delDevBtn').on('click', delDevice);
     $('#saveDevBtn').on('click', saveDevice);
     $('#cancelDevBtn').on('click', hideDevice);
+    $('#saveBtn').on('click', save_options);
+    $('#updateBtn').on('click', restore_options);
+    restore_options(true);
 });
