@@ -86,7 +86,10 @@ function getDevices(e) {
             var options = JSON.parse(powerPoint.config.options);
             for (var i=0, n=ids.length; i < n; i++) {
                 var id = ids[i];
-                powerPoint.devices.find('id', id)[0]['state'] = options[id];
+                var dev = powerPoint.devices.find('id', id);
+                if(dev !== null) {
+                    dev[0]['state'] = options[id];
+                }
             }
         }
     }
