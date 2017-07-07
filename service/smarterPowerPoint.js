@@ -114,8 +114,13 @@ cron.schedule('*/10 * * * * *', function () {
     fritz.getSessionID(config.user, config.pass, function (sid) {
         fritz.getSwitchList(sid, function (listinfos) {
             fritz.getSwitchPower(sid, listinfos, function (sid) {
-                if(fs.existsSync('notify.txt')) {
-                    lastNotification = JSON.parse(fs.readFileSync('notify.txt', 'utf-8'));
+                var lastNotification = {};
+                try {
+                    if(fs.existsSync('notify.txt')) {
+                        lastNotification = JSON.parse(fs.readFileSync('notify.txt', 'utf-8'));
+                    }
+                } catch(e) {
+                    lastNotification = {};
                 }
 
                 var result = null;
@@ -137,9 +142,18 @@ cron.schedule('*/10 * * * * *', function () {
                         break;
                     }
                 }
-                fs.writeFile('notify.txt', JSON.stringify(lastNotification), function (err) {});
-                if (result && lastNotification.valid) {
-                    fs.writeFile('state.txt', JSON.stringify(result), function (err) {});
+
+                var lastNotificationString = JSON.stringify(lastNotification);
+                var resultString = JSON.stringify(result);
+/*
+                console.log(lastNotificationString);
+                console.log(resultString);
+                console.log(sid);
+                console.log('----');
+*/
+                fs.writeFile('notify.txt', lastNotificationString, function (err) {});
+                if (resultString && lastNotification.valid) {
+                    fs.writeFile('state.txt', resultString, function (err) {console.log(err)});
                 }
             }, moreParam);
         }, moreParam);

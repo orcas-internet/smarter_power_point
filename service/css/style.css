@@ -1,0 +1,30 @@
+.coffee-box {
+  text-align: center;
+  margin-top: 15%; }
+  .coffee-box span {
+    position: relative;
+    width: 100px;
+    border-radius: 50%;
+    border: 1px solid #cdcdcd;
+    height: 100px;
+    display: inline-block;
+    box-shadow: 0 4px 2px -3px;
+    text-align: center;
+    font-size: 50px;
+    cursor: pointer; }
+    .coffee-box span i {
+      line-height: 100px;
+      color: #cdcdcd; }
+    .coffee-box span .loader {
+      display: none; }
+
+.working i {
+  display: none; }
+.working .loader {
+  display: block !important;
+  transform: scale(2.5);
+  margin: 35px 0 0 35px; }
+.working span {
+  background: rgba(255, 255, 0, 0.2); }
+
+/*# sourceMappingURL=style.css.map */

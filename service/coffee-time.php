@@ -34,7 +34,7 @@ function setDevices() {
     return "[]";
 }
 
-if($_REQUEST['get'] != "") {
+if(isset($_REQUEST['get']) && $_REQUEST['get'] != "") {
     if($_REQUEST['get'] == "devices") {
         echo getDevices();
     } else if($_REQUEST['get'] == "all") {
@@ -44,7 +44,7 @@ if($_REQUEST['get'] != "") {
     } else {
         echo getState();
     }
-} else if($_REQUEST['set'] != "") {
+} else if(isset($_REQUEST['get']) && $_REQUEST['set'] != "") {
     if($_REQUEST['set'] == "devices") {
         echo setDevices();
     }
