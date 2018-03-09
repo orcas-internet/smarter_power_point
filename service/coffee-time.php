@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+
 function getAll() {
     $content = file_get_contents(__DIR__ . '/notify.txt');
     $notify  = json_decode($content, true);
@@ -7,16 +9,24 @@ function getAll() {
     return json_encode($notify);
 }
 
+function getContent($filename) {
+    try {
+        return file_get_contents($filename);
+    } catch (Exception $exception) {
+        echo $exception->getMessage();
+    }
+}
+
 function getNotify() {
-    return file_get_contents(__DIR__ . '/notify.txt');
+    return getContent(__DIR__ . '/notify.txt');
 }
 
 function getState() {
-    return file_get_contents(__DIR__ . '/state.txt');
+    return getContent(__DIR__ . '/state.txt');
 }
 
 function getDevices() {
-    $content = file_get_contents(__DIR__ . '/devices.txt');
+    $content = getContent(__DIR__ . '/devices.txt');
     if($content !== false && $content != "") {
         return $content;
     }
@@ -26,13 +36,23 @@ function getDevices() {
 function setDevices() {
     $devices = $_REQUEST['devices'];
     if($devices != "") {
-        $result = file_put_contents(__DIR__ . '/devices.txt', $devices);
-        if($result !== false) {
-            return $devices;
+        try {
+            $result = file_put_contents(__DIR__ . '/devices.txt', $devices);
+            if($result !== false || $result !== FALSE) {
+                return $devices;
+            }
+        } catch (Exception $exception) {
+            echo $exception->getMessage();
         }
     }
     return "[]";
 }
+
+set_error_handler(
+    function ($severtiy, $message, $file, $line) {
+        throw new ErrorException($message, $severtiy, $severtiy, $file, $line);
+    }
+);
 
 if(isset($_REQUEST['get']) && $_REQUEST['get'] != "") {
     if($_REQUEST['get'] == "devices") {
@@ -44,7 +64,7 @@ if(isset($_REQUEST['get']) && $_REQUEST['get'] != "") {
     } else {
         echo getState();
     }
-} else if(isset($_REQUEST['get']) && $_REQUEST['set'] != "") {
+} else if(isset($_REQUEST['set']) && $_REQUEST['set'] != "") {
     if($_REQUEST['set'] == "devices") {
         echo setDevices();
     }

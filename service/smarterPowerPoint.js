@@ -11,8 +11,8 @@ function getCombinations(ids) {
     var result = [];
     var f = function(prefix, ids) {
         for (var i = 0; i < ids.length; i++) {
-            result.push(prefix == '' ? ids[i] : prefix + ',' + ids[i]);
-            f(prefix == '' ? ids[i] : prefix + ',' + ids[i], ids.slice(i + 1));
+            result.push(prefix === '' ? ids[i] : prefix + ',' + ids[i]);
+            f(prefix === '' ? ids[i] : prefix + ',' + ids[i], ids.slice(i + 1));
         }
     };
     f('', ids);
@@ -24,9 +24,9 @@ function getEnergyLevels() {
         energy: {min: 0, max: 2000},
         run: []
     }];
-    if(fs.existsSync('devices.txt')) {
+    if(fs.existsSync(__dirname + '/devices.txt')) {
         var deviceIds = [];
-        var deviceArray = JSON.parse(fs.readFileSync('devices.txt', 'utf-8'));
+        var deviceArray = JSON.parse(fs.readFileSync(__dirname + '/devices.txt', 'utf-8'));
         var devices = [];
         for (var d=0, n=deviceArray.length; d < n; d++) {
             var dev = deviceArray[d];
@@ -63,7 +63,7 @@ function getEnergyLevels() {
                     break;
                 }
             }
-            if(inserted == false) {
+            if(inserted === false) {
                 energyLevels.push({
                     energy: {
                         min: min,
@@ -116,8 +116,8 @@ cron.schedule('*/10 * * * * *', function () {
             fritz.getSwitchPower(sid, listinfos, function (sid) {
                 var lastNotification = {};
                 try {
-                    if(fs.existsSync('notify.txt')) {
-                        lastNotification = JSON.parse(fs.readFileSync('notify.txt', 'utf-8'));
+                    if(fs.existsSync(__dirname + '/notify.txt')) {
+                        lastNotification = JSON.parse(fs.readFileSync(__dirname + '/notify.txt', 'utf-8'));
                     }
                 } catch(e) {
                     lastNotification = {};
@@ -129,7 +129,7 @@ cron.schedule('*/10 * * * * *', function () {
                     if (element.energy.min <= sid && element.energy.max >= sid) {
                         var timeIns = Date.now();
                         if(lastNotification.time > 0 && timeIns > lastNotification.time + config.delay) {
-                            if(lastNotification.level == index) {
+                            if(lastNotification.level === index) {
                                 result = element.run;
                                 lastNotification.valid = true;
                             } else {
@@ -145,15 +145,18 @@ cron.schedule('*/10 * * * * *', function () {
 
                 var lastNotificationString = JSON.stringify(lastNotification);
                 var resultString = JSON.stringify(result);
-/*
-                console.log(lastNotificationString);
-                console.log(resultString);
-                console.log(sid);
-                console.log('----');
-*/
-                fs.writeFile('notify.txt', lastNotificationString, function (err) {});
+
+                console.warn("----");
+                console.warn(lastNotificationString);
+                console.warn(resultString);
+                console.warn(sid);
+                console.warn('----');
+
+                fs.writeFile(__dirname + '/notify.txt', lastNotificationString, function (err) {});
                 if (resultString && lastNotification.valid) {
-                    fs.writeFile('state.txt', resultString, function (err) {console.log(err)});
+                    fs.writeFile(__dirname + '/state.txt', resultString, function (err) {
+                        console.log(err)
+                    });
                 }
             }, moreParam);
         }, moreParam);
