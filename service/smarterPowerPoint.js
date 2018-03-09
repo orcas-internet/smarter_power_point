@@ -146,16 +146,18 @@ cron.schedule('*/10 * * * * *', function () {
                 var lastNotificationString = JSON.stringify(lastNotification);
                 var resultString = JSON.stringify(result);
 
-                console.warn("----");
-                console.warn(lastNotificationString);
-                console.warn(resultString);
-                console.warn(sid);
-                console.warn('----');
+                // console.warn("----");
+                console.log('Current power used: ' + lastNotification['power']);
+                // console.warn(resultString);
+                // console.warn(sid);
+                // console.warn('----');
 
                 fs.writeFile(__dirname + '/notify.txt', lastNotificationString, function (err) {});
                 if (resultString && lastNotification.valid) {
                     fs.writeFile(__dirname + '/state.txt', resultString, function (err) {
-                        console.log(err)
+                        if (err) {
+                            console.log(err.message);
+                        }
                     });
                 }
             }, moreParam);
