@@ -139,6 +139,7 @@ cron.schedule('*/10 * * * * *', function () {
                         lastNotification.level = index;
                         lastNotification.time = timeIns;
                         lastNotification.power = sid;
+                        lastNotification.devices = [];
                         break;
                     }
                 }
@@ -146,11 +147,9 @@ cron.schedule('*/10 * * * * *', function () {
                 var lastNotificationString = JSON.stringify(lastNotification);
                 var resultString = JSON.stringify(result);
 
-                // console.warn("----");
-                console.log('Current power used: ' + lastNotification['power']);
+                console.log('Current power used: ' + lastNotification.power);
                 // console.warn(resultString);
                 // console.warn(sid);
-                // console.warn('----');
 
                 fs.writeFile(__dirname + '/notify.txt', lastNotificationString, function (err) {});
                 if (resultString && lastNotification.valid) {

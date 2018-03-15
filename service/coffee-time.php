@@ -13,8 +13,17 @@ function getContent($filename) {
     try {
         return file_get_contents($filename);
     } catch (Exception $exception) {
-        echo $exception->getMessage();
+        return convertExceptionToJson($exception);
     }
+}
+
+function convertExceptionToJson(\Exception $ex) {
+    return json_encode(array(
+        'error' => array(
+            'msg' => $ex->getMessage(),
+            'code' => $ex->getCode()
+        ),
+    ));
 }
 
 function getNotify() {
@@ -42,7 +51,7 @@ function setDevices() {
                 return $devices;
             }
         } catch (Exception $exception) {
-            echo $exception->getMessage();
+            return convertExceptionToJson($exception);
         }
     }
     return "[]";

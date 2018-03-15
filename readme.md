@@ -1,18 +1,18 @@
 # smarter power point
-Network notification for coffee machines and electric kettle using AVM Fritz!DECT in smarthome. Not only useful for java developers.
+Network notification for coffee machines and electric kettle using AVM Fritz!DECT in smarthome. Not only useful for Java developers.
 
 **We exclude any liability whatsoever for any damages whatsoever that this software may cause.**
 
-**Attention**: this is a very **unsecure implementation**. Use it only if you know what you do.
+**Attention**: This is a very **unsecure** implementation. Use it only if you know what you do.
 
-## install
+## Install
 
 - clone repository
 
       projects# git clone https://github.com/orcas-internet/smarter_power_point.git
       projects# cd smarter_power_point      
   
-### install service
+### Install Service
 
 - go into service folder
 
@@ -39,7 +39,7 @@ Network notification for coffee machines and electric kettle using AVM Fritz!DEC
 
       projects/smarter_power_point/service# node smarterPowerPoint.js
 
-### install chrome extension
+### Install chrome-extension
 
 - go into chrome extension settings
 
@@ -62,8 +62,8 @@ Network notification for coffee machines and electric kettle using AVM Fritz!DEC
 - click on "+" to add device, which should be connected to power point e.g.
 
       name: coffee machine // name of machine
-      min:  700            // minimum elektric power, if machine is on
-      max:  800            // maximum elektric power, if machine is on
+      min:  700            // minimum electric power, if machine is on
+      max:  800            // maximum electric power, if machine is on
       
 - click on "save"
 

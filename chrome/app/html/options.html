@@ -9,7 +9,7 @@
 
 <label for="input-url" class="block_title">Server</label>
 <div class="block">
-    <input type="text" id="input-url" value="" style="width: 200px;" placeholder="http://server:80">
+    <input type="text" id="input-url" value="" style="width: 200px;" placeholder="http://example.com">
 </div>
 
 <label class="block_title">Benachrichtigungen</label>
@@ -28,13 +28,16 @@
 
 <div id="status" class="block"></div>
 
-<button id="saveBtn">Speichern</button>
-<button id="updateBtn">Aktualisieren</button>
+<div class="button-nav">
+    <button id="saveBtn">Speichern</button>
+    <button id="updateBtn">Aktualisieren</button>
+</div>
 
 <div class="button-nav">
     <button id="delDevBtn" class="toolBtn" title="Gerät löschen">-</button>
     <button id="addDevBtn" class="toolBtn" title="Gerät hinzufügen">+</button>
 </div>
+
 <label class="block_title">Geräte</label>
 <div class="block" id="devs">
 </div>

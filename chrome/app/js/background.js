@@ -42,17 +42,21 @@ function checkCoffee() {
             for(var index = 0; index < diff.length; index++) {
                 var element = diff[index];
                 var dev = powerPoint.devices.find('name', element)[0];
-                if(dev.state == 2 || dev.state == 3) {
+                // if(dev.state == 2 || dev.state == 3) {
+                if (typeof dev != 'undefined' && typeof element != 'undefined') {
                     showNotification(element, dev.endText, dev.endSound);
                 }
+                // }
             }
 
             for(var index2 = 0; index2 < diff2.length; index2++) {
                 var element2 = diff2[index2];
                 var dev2 = powerPoint.devices.find('name', element2)[0];
-                if(dev2.state == 1 || dev2.state == 3) {
-                    showNotification(element2, dev2.startText, dev2.startSound);
+                // if(dev2.state == 1 || dev2.state == 3) {
+                if (typeof dev2 != 'undefined' && typeof element2 != 'undefined') {
+                    showNotification(element2, dev2.startText, dev2.endSound);
                 }
+                //}
             }
         }
 
