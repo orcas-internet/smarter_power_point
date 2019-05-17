@@ -50,6 +50,8 @@
 
 .button-nav {
   display: inline-table; }
+  .button-nav button {
+    margin: 1px; }
 
 label[for="modifyDev"] {
   display: none; }

@@ -63,6 +63,10 @@
 
 .button-nav {
     display: inline-table;
+
+    button {
+        margin: 1px;
+    }
 }
 
 label[for="modifyDev"] {

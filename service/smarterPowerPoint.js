@@ -1,161 +1,77 @@
-/**
- * smarter power point
- * @author: info@orcas.de
- */
+const express = require('express');
+const config = require('./config');
+const util = require('./modules/util');
+const energy = require('./modules/energy');
+const cors = require('cors');
 
-var config = require('./config');
+var app = express();
+app.use(cors({origin: true}));
+app.use(express.json());
+app.use(express.static(__dirname));
 
-var fs = require('fs');
+process.on('uncaughtException', err => {
+    console.log(err);
+});
 
-function getCombinations(ids) {
-    var result = [];
-    var f = function(prefix, ids) {
-        for (var i = 0; i < ids.length; i++) {
-            result.push(prefix == '' ? ids[i] : prefix + ',' + ids[i]);
-            f(prefix == '' ? ids[i] : prefix + ',' + ids[i], ids.slice(i + 1));
-        }
-    };
-    f('', ids);
-    return result;
-}
-
-function getEnergyLevels() {
-    var energyLevels = [{
-        energy: {min: 0, max: 2000},
-        run: []
-    }];
-    if(fs.existsSync('devices.txt')) {
-        var deviceIds = [];
-        var deviceArray = JSON.parse(fs.readFileSync('devices.txt', 'utf-8'));
-        var devices = [];
-        for (var d=0, n=deviceArray.length; d < n; d++) {
-            var dev = deviceArray[d];
-            if (dev != null) {
-                deviceIds.push(dev.id + '');
-                devices[dev.id + ''] = dev;
-            }
-        }
-        var allCombinations = getCombinations(deviceIds);
-        for (var a=0, an=allCombinations.length; a < an; a++) {
-            var combination = allCombinations[a].split(',');
-            var min = 0;
-            var max = 0;
-            var names = [];
-            for (var c=0, cn=combination.length; c < cn; c++) {
-                var id=combination[c];
-                dev = devices[id + ''];
-                min += (parseInt(dev.min) * 1000);
-                max += (parseInt(dev.max) * 1000);
-                names.push(dev.name);
-            }
-            var inserted = false;
-            for (var l=0, en=energyLevels.length; l < en; l++) {
-                var level = energyLevels[l];
-                if(level.energy.min > 0 && min > level.energy.min) {
-                    energyLevels.splice(l, 0, {
-                        energy: {
-                            min: min,
-                            max: max
-                        },
-                        run: names
-                    });
-                    inserted = true;
-                    break;
-                }
-            }
-            if(inserted == false) {
-                energyLevels.push({
-                    energy: {
-                        min: min,
-                        max: max
-                    },
-                    run: names
-                });
-            }
-        }
+function notifyRouteAccessed(routeName) {
+    if (config.app.debug) {
+        console.log(`Route '${routeName}' has been requested!`);
     }
-    return energyLevels;
 }
 
-var energyLevel = [
-    {
-        energy: {min: 0, max: 2000},
-        run: []
-    },
-    {
-        energy: {min: 2400000, max: 2590000},
-        run: ['Wasserkocher', "Kaffemaschine"]
-    },
-    {
-        energy: {min: 1700000, max: 1900000},
-        run: ["Wasserkocher"]
-    },
-    {
-        energy: {min: 700000, max: 800000},
-        run: ["Kaffemaschine"]
-    }
-];
-var energyLevels = getEnergyLevels();
-if(energyLevels.length > 1) {
-    energyLevel = energyLevels;
-}
-var lastNotification = {
-    time: 0,
-    level: 0,
-    valid: false,
-    power: 0
-};
-var cron = require('node-cron');
+// register routes
+app.get('/', (request, response) => {
+    notifyRouteAccessed('/');
+    response.sendFile(__dirname + '/index.html');
+});
+
+app.get('/get/all', (request, response) => {
+    notifyRouteAccessed('/get/all');
+    // energy.fetchDataFromFRITZ();
+    var notify = JSON.parse(util.getFileContents('notify.txt'));
+    var state = JSON.parse(util.getFileContents('state.txt'));
+    notify.devices = state == null ? [] : state;
+    var json = JSON.stringify(notify);
+    console.log(json);
+    response.send(json);
+});
+
+app.get('/get/notify', (request, response) => {
+    notifyRouteAccessed('/get/notify');
+    // energy.fetchDataFromFRITZ();
+    response.json(JSON.parse(util.getFileContents('notify.txt')));
+});
+
+app.get('/get/state', (request, response) => {
+    notifyRouteAccessed('/get/state');
+    // energy.fetchDataFromFRITZ();
+    response.json(JSON.parse(util.getFileContents('state.txt')));
+});
+
+app.get('/get/devices', (request, response) => {
+    notifyRouteAccessed('/get/devices');
+    response.json(JSON.parse(util.getFileContents('devices.txt')));
+});
+
+app.post('/set/devices', (request, response) => {
+    notifyRouteAccessed('/set/devices');
+    util.saveToFile('devices.txt', [request.body.devices]);
+    response.sendStatus(201);
+});
+
+// run app
+app.on('error', (err) => {
+    console.error("Server error " + err);
+});
+
+
+const port = config.app.port;
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}!`);
+});
+
+const cron = require('node-cron');
 
 cron.schedule('*/10 * * * * *', function () {
-    var fritz = require('smartfritz');
-
-    var moreParam = {url: config.host};
-    fritz.getSessionID(config.user, config.pass, function (sid) {
-        fritz.getSwitchList(sid, function (listinfos) {
-            fritz.getSwitchPower(sid, listinfos, function (sid) {
-                var lastNotification = {};
-                try {
-                    if(fs.existsSync('notify.txt')) {
-                        lastNotification = JSON.parse(fs.readFileSync('notify.txt', 'utf-8'));
-                    }
-                } catch(e) {
-                    lastNotification = {};
-                }
-
-                var result = null;
-                for (var index = 0; index < energyLevel.length; index++) {
-                    var element = energyLevel[index];
-                    if (element.energy.min <= sid && element.energy.max >= sid) {
-                        var timeIns = Date.now();
-                        if(lastNotification.time > 0 && timeIns > lastNotification.time + config.delay) {
-                            if(lastNotification.level == index) {
-                                result = element.run;
-                                lastNotification.valid = true;
-                            } else {
-                                lastNotification.valid = false;
-                            }
-                        }
-                        lastNotification.level = index;
-                        lastNotification.time = timeIns;
-                        lastNotification.power = sid;
-                        break;
-                    }
-                }
-
-                var lastNotificationString = JSON.stringify(lastNotification);
-                var resultString = JSON.stringify(result);
-/*
-                console.log(lastNotificationString);
-                console.log(resultString);
-                console.log(sid);
-                console.log('----');
-*/
-                fs.writeFile('notify.txt', lastNotificationString, function (err) {});
-                if (resultString && lastNotification.valid) {
-                    fs.writeFile('state.txt', resultString, function (err) {console.log(err)});
-                }
-            }, moreParam);
-        }, moreParam);
-    }, moreParam);
+    energy.fetchDataFromFRITZ();
 });

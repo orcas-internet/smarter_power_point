@@ -1,21 +1,22 @@
 {
-  "name": "smarterpowerpoint",
+  "name": "smarter-power-point",
   "version": "1.0.0",
-  "description": "service to request power levels from AVM FRITZ!DECT 200",
+  "description": "",
   "main": "smarterPowerPoint.js",
   "scripts": {
-    "test": "test"
+    "service": "node smarterPowerPoint.js"
   },
-  "keywords": [
-    "service",
-    "avm",
-    "fritz",
-    "fritz!dect"
-  ],
-  "author": "info@orcas.de",
-  "license": "GPL-3.0",
+  "author": "bl4ckj4r",
+  "license": "ISC",
   "dependencies": {
-    "smartfritz": "^0.1.7",
-    "node-cron": "^1.1.2"
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "node-cron": "^2.0.3",
+    "smartfritz": "^0.1.7"
+  },
+  "devDependencies": {
+    "ws": "3.3.2"
   }
 }
