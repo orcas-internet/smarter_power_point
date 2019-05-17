@@ -3,77 +3,71 @@ Network notification for coffee machines and electric kettle using AVM Fritz!DEC
 
 **We exclude any liability whatsoever for any damages whatsoever that this software may cause.**
 
-**Attention**: This is a very **unsecure** implementation. Use it only if you know what you do.
+**Attention**: This is a very **unsecure** implementation. Use it only if you know what you're doing.
 
-## Install
-
-- clone repository
-
-      projects# git clone https://github.com/orcas-internet/smarter_power_point.git
-      projects# cd smarter_power_point      
+## Installation
+To install clone this repository using the following commands:
+<pre>
+$ git clone https://github.com/orcas-internet/smarter_power_point.git
+$ cd smarter_power_point
+</pre>      
   
-### Install Service
+#### Install Service
+First of all you have to configure your Fritz!DECT connection. To do this simply create a copy of 
+<code>config.dist.js</code> and name it <code>config.js</code> and then adapt the configuration keys to your needs.
 
-- go into service folder
+To install the nodeJS-Service run the following commands from the repository root directory (we assume, that nodeJS and 
+npm are installed on your system and available from the commandline):
+<pre>
+$ cd service
+$ npm install
+$ npm run service
+</pre>
 
-      projects/smarter_power_point# cd service
-    
-- install npm
+#### Install chrome-extension
+To install the chrome extension follow these steps (start in repository root directory):
+<pre>
+$ cd chrome
+$ ./tar.sh
+</pre>
 
-      projects/smarter_power_point/service# sudo npm install npm -g
-  
-- install necessary packages
+This command has created a tar.gz-File in service folder. If you now visit the index page of your service, you should be 
+able to download the file and install it as a packed extension under <code>chrome://extensions</code>
 
-      projects/smarter_power_point/service# npm install
-      
-- configure service
+When your extension was loaded, you can open a popup by simply clicking on it's icon.
 
-      projects/smarter_power_point/service# cp config.dist.js config.js
-      projects/smarter_power_point/service# vim config.js
-      
-- configure Apache or nginx to use service/ folder as document root
+Now insert the url of the nodeJS web-service and click on &quot;Update&quot;.
 
-    e.g. as `http://127.0.0.1:8003`
-    
-- start the service
+To add a new device click on &quot;+&quot;-Button and fill in the following **required** fields:
+<pre>
+Gerätename: Wasserkocher
+min. Leistung: 1700
+max. Leistung: 1900
+Bild: img/water.jpg <sup>1</sup>
+Start Text: Wasserkocher angeschaltet
+End Text: Wasserkocher fertig!
+</pre>
 
-      projects/smarter_power_point/service# node smarterPowerPoint.js
+Now click on &quot;Save&quot; and then &quot;Update&quot;
 
-### Install chrome-extension
+<sup>1</sup>
+The following image files are available:
 
-- go into chrome extension settings
+    - img/coffee.jpg
+    - img/water.jpg
 
-      url# chrome://extensions/
-      
-- enable developer mode
+The following audio files are available:
 
-- load unpacked extension from
+    - audio/coffee_start.mp3
+    - audio/coffee_finished.mp3
+    - audio/water_start.mp3
+    - audio/water_finished.mp3
 
-      projects/smarter_power_point/chrome/app
-
-- configure extensions by click on the extension icon
-
-- insert url to the configured web server
-
-      http://127.0.0.1:8003
-      
-- click on "Update" to check connection to service. Under state should be the current date
-
-- click on "+" to add device, which should be connected to power point e.g.
-
-      name: coffee machine // name of machine
-      min:  700            // minimum electric power, if machine is on
-      max:  800            // maximum electric power, if machine is on
-      
-- click on "save"
-
-- click on "Update", the setting for "coffee machine" should be appear under "Notifications"
-
-- change settings for coffee machine
+Last but no least change the notification settings for the new device using the provided select box.
 
       none // if no notification should be displayed
       start // if notification should be displayed only if the machine is start
       finished // if notification should be displayed only if the machine is finished
       start+finished // if notification should be displayed if the machine is start and finished
       
-- click on "Save"
+Now hit "Save"!

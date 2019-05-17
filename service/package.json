@@ -4,7 +4,7 @@
   "description": "",
   "main": "smarterPowerPoint.js",
   "scripts": {
-    "run": "node smarterPowerPoint.js"
+    "service": "node smarterPowerPoint.js"
   },
   "author": "bl4ckj4r",
   "license": "ISC",
