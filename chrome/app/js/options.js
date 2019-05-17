@@ -3,10 +3,12 @@ $ = jQuery.noConflict();
 var DEVICES = [];
 var CONFIG = null;
 
-function send(aUrl, aCallBack, aData) {
+function send(aRequestType, aUrl, aCallBack, aData) {
     if(aUrl.length != 0) {
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", aUrl);
+        xmlhttp.open(aRequestType, aUrl);
+        if (aRequestType==='POST')
+            xmlhttp.setRequestHeader("Content-type", "application/json");
         xmlhttp.onload = aCallBack;
         xmlhttp.send(aData);
     }
@@ -108,8 +110,15 @@ function saveDevice() {
                 devices[d1++] = dev;
             }
         }
-        data.append('devices', JSON.stringify(devices));
-        send(url + '/coffee-time.php?set=devices', 'updateDevices', data);
+        data.append('devices', JSON.stringify(DEVICES));
+
+        var object = {};
+        data.forEach(function(value, key){
+            object[key] = value;
+        });
+        var json = JSON.stringify(object);
+        console.log(json);
+        send("POST", url + '/set/devices', 'updateDevices', JSON.stringify(object));
         hideDevice();
     }
 }
@@ -162,7 +171,12 @@ function delDevice() {
                 DEVICES.splice(d, 1);
                 var data = new FormData();
                 data.append('devices', JSON.stringify(DEVICES));
-                send(url + '/coffee-time.php?set=devices', updateDevices, data);
+                var object = {};
+                data.forEach(function(value, key){
+                    object[key] = value;
+                });
+                var json = JSON.stringify(object);
+                send("POST", url + '/set/devices', updateDevices, json);
                 hideDevice();
                 break;
             }
@@ -219,15 +233,24 @@ function restore_options(withDevices) {
         url: ''
     }, function(config) {
         CONFIG = config;
-        send(config.url + '/coffee-time.php?get=all', updateState);
+        send("GET", config.url + '/get/all', updateState);
         if(withDevices === true || withDevices.target != null) {
-            send(config.url + '/coffee-time.php?get=devices', updateDevices);
+            send("GET", config.url + '/get/devices', updateDevices);
         }
     });
     window.setTimeout(restore_options, 5000, false);
 }
 
 $(document).ready(function() {
+    $('#notificationbtn').on('click', function () {
+        chrome.notifications.create('Küche', {
+            type: 'basic',
+            iconUrl: '../img/coffee.jpg',
+            title: 'Title',
+            message: 'Message'
+        });
+    });
+
     $('#addDevBtn').on('click', addDevice);
     $('#delDevBtn').on('click', delDevice);
     $('#saveDevBtn').on('click', saveDevice);

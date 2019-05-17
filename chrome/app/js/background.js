@@ -4,59 +4,59 @@ var powerPoint = {
 };
 var running = [];
 
-Array.prototype.diff = function(a) {
-    return this.filter(function(i) {
+Array.prototype.diff = function (a) {
+    return this.filter(function (i) {
         return a.indexOf(i) < 0;
     });
 };
 
-Array.prototype.find = function(name, value) {
-    return this.filter(function(item) {
+Array.prototype.find = function (name, value) {
+    return this.filter(function (item) {
         var val = item[name];
         return val == value;
     });
 };
 
 function send(aUrl, aCallBack, aData) {
-    if(aUrl.length != 0) {
+    if (aUrl.length != 0) {
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", aUrl);
+        xmlhttp.open("GET", aUrl);
         xmlhttp.onload = aCallBack;
         xmlhttp.send(aData);
     }
 }
 
 function checkCoffee() {
-    if(powerPoint.url.length == 0) {
+    if (powerPoint.url.length == 0) {
         window.setTimeout(checkCoffee, 1);
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", powerPoint.url);
-    xmlhttp.onload = function(e) {
+    xmlhttp.open("GET", powerPoint.url);
+    xmlhttp.onload = function (e) {
         var response = JSON.parse(e.target.responseText);
 
         var diff = running.diff(response);
         var diff2 = response.diff(running);
 
-        if(powerPoint.devices.length > 0) {
-            for(var index = 0; index < diff.length; index++) {
+        if (powerPoint.devices.length > 0) {
+            for (var index = 0; index < diff.length; index++) {
                 var element = diff[index];
                 var dev = powerPoint.devices.find('name', element)[0];
-                // if(dev.state == 2 || dev.state == 3) {
-                if (typeof dev != 'undefined' && typeof element != 'undefined') {
-                    showNotification(element, dev.endText, dev.endSound);
+                if (dev.state === 2 || dev.state === 3) {
+                    // if (typeof dev != 'undefined' && typeof element != 'undefined') {
+                        showNotification(element, dev.endText, dev.endSound);
+                    // }
                 }
-                // }
             }
 
-            for(var index2 = 0; index2 < diff2.length; index2++) {
+            for (var index2 = 0; index2 < diff2.length; index2++) {
                 var element2 = diff2[index2];
                 var dev2 = powerPoint.devices.find('name', element2)[0];
-                // if(dev2.state == 1 || dev2.state == 3) {
-                if (typeof dev2 != 'undefined' && typeof element2 != 'undefined') {
-                    showNotification(element2, dev2.startText, dev2.endSound);
+                if (dev2.state === 1 || dev2.state === 3) {
+                    // if (typeof dev2 != 'undefined' && typeof element2 != 'undefined') {
+                        showNotification(element2, dev2.startText, dev2.endSound);
+                    // }
                 }
-                //}
             }
         }
 
@@ -68,7 +68,8 @@ function checkCoffee() {
 }
 
 function showNotification(element, text, sound) {
-    if(sound) {
+    console.log('i want to notify the user in google chrome!!!!');
+    if (sound) {
         var audio = new Audio();
         audio.src = sound;
         audio.play();
@@ -83,15 +84,15 @@ function showNotification(element, text, sound) {
 
 function getDevices(e) {
     var devices = JSON.parse(e.target.responseText);
-    if(devices !== null && typeof devices === 'object') {
+    if (devices !== null && typeof devices === 'object') {
         powerPoint.devices = devices;
-        if(powerPoint.config) {
+        if (powerPoint.config) {
             var ids = powerPoint.config.ids.split(",");
             var options = JSON.parse(powerPoint.config.options);
-            for (var i=0, n=ids.length; i < n; i++) {
+            for (var i = 0, n = ids.length; i < n; i++) {
                 var id = ids[i];
                 var dev = powerPoint.devices.find('id', id);
-                if(dev !== null) {
+                if (typeof dev[0] !== 'undefined') {
                     dev[0]['state'] = options[id];
                 }
             }
@@ -104,10 +105,11 @@ function restore_options() {
         ids: '',
         options: '',
         url: ''
-    }, function(config) {
+    }, function (config) {
         powerPoint.config = config;
-        powerPoint.url = config.url + '/coffee-time.php';
-        send(config.url + '/coffee-time.php?get=devices', getDevices);
+        powerPoint.url = config.url + '/get/state';
+        send(config.url + '/get/devices', getDevices);
+        checkCoffee();
     });
 }
 
@@ -115,15 +117,15 @@ chrome.storage.sync.get({
     ids: '',
     options: '',
     url: ''
-}, function(config) {
+}, function (config) {
     powerPoint.config = config;
-    powerPoint.url = config.url + '/coffee-time.php';
+    powerPoint.url = config.url + '/get/state';
     checkCoffee();
     window.setInterval(restore_options, 5000);
 });
 
-if(chrome.app.runtime) {
-    chrome.app.runtime.onLaunched.addListener(function() {
+if (chrome.app.runtime) {
+    chrome.app.runtime.onLaunched.addListener(function () {
         chrome.app.window.create("html/options.html");
     });
 }
