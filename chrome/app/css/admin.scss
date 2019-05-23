@@ -1,0 +1,42 @@
+.block {
+  width: auto;
+}
+
+.block-group {
+  label {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 0.25em;
+  }
+
+  input {
+    margin-bottom: 1em;
+  }
+}
+
+.admin-button {
+  padding: 6px;
+  font-size: 1.2em;
+
+  background: none;
+  border: 2px solid green;
+  border-radius: 2px;
+
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  &:hover {
+    border-color: limegreen;
+  }
+}
+
+#auth-indicator {
+  display: block;
+  font-size: 0.9em;
+
+  color: blue;
+}
+
+#button-nav {
+  margin: 1em;
+}

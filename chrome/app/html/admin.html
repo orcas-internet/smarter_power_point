@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smarter Power Point - Admin</title>
+    <link rel="stylesheet" type="text/css" href="../css/options.css">
+    <link rel="stylesheet" type="text/css" href="../css/admin.css">
+</head>
+<body>
+<h1>Smarter Power Point - Administration</h1>
+
+<label class="block_title" for="credentials">Credentials</label>
+<div class="block" id="credentials">
+    <div class="block-group">
+        <label for="username">Benutzername:</label>
+        <input type="text" id="username">
+    </div>
+    <div class="block-group">
+        <label for="password">Passwort:</label>
+        <input type="password" id="password">
+    </div>
+    <div>
+        <button class="admin-button" id="auth-btn" type="button">Anmelden</button>
+        <label id="auth-indicator"></label>
+    </div>
+</div>
+
+
+<div class="block">
+    <div class="block-group" id="button-nav">
+        <button id="delDevBtn" class="toolBtn" title="Gerät löschen" disabled>-</button>
+        <button id="addDevBtn" class="toolBtn" title="Gerät hinzufügen" disabled>+</button>
+    </div>
+    <div id="devs">
+    </div>
+</div>
+
+<label for="modifyDev" class="block_title">Gerät</label>
+<div class="block" id="modifyDev">
+    <input type="hidden" name="devId" id="devId" value="">
+    <label for="devName" title="Gerätename">Gerätename</label>
+    <input type="text" name="devName" id="devName" value="" size="10"><br>
+    <label for="devMin" title="minimale Leistung">min. Leistung</label>
+    <input type="number" name="devMin" id="devMin" value="" min="0" max="50000"> W<br>
+    <label for="devMax" title="maximale Leistung">max. Leistung</label>
+    <input type="number" name="devMax" id="devMax" value="" min="0" max="50000"> W<br/>
+    <label for="devImg" title="Bild">Bild</label>
+    <input type="text" name="devImg" id="devImg" value="" size="10"><br/>
+    <label for="devStartText" title="Starttext">Start Text</label>
+    <input type="text" name="devStartText" id="devStartText" value="" size="10" placeholder="Geräte wurde angeschaltet"><br/>
+    <label for="devStartSound" title="Startton">Start Sound</label>
+    <input type="text" name="devStartSound" id="devStartSound" value="" size="10" placeholder="audio/start.mp3"><br/>
+    <label for="devEndText" title="Endtext">End Text</label>
+    <input type="text" name="devEndText" id="devEndText" value="" size="10" placeholder="Geräte ist fertig"><br/>
+    <label for="devEndSound" title="Endton">End Sound</label>
+    <input type="text" name="devEndSound" id="devEndSound" value="" size="10" placeholder="audio/finished.mp3"><br/>
+    <div class="button-nav">
+        <button id="cancelDevBtn">Abrechen</button>
+        <button id="saveDevBtn">Speichern</button>
+    </div>
+</div>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

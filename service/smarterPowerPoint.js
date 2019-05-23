@@ -59,6 +59,17 @@ app.post('/set/devices', (request, response) => {
     response.sendStatus(201);
 });
 
+app.post('/authenticate', (request, response) => {
+   notifyRouteAccessed('/authenticate');
+   const data = request.body;
+   const hashedPassword = util.sha1(config.app.admin.password);
+
+   if (data.username === config.app.admin.username && data.password === hashedPassword)
+       response.sendStatus(200);
+    else
+        response.sendStatus(401);
+});
+
 // run app
 app.on('error', (err) => {
     console.error("Server error " + err);
