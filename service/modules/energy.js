@@ -44,7 +44,7 @@ function getEnergyLevels() {
 
         for (var c = 0; c < combination.length; c++) {
             var combinationId = combination[c];
-            device = devices[id + ''];
+            device = devices[combinationId + ''];
             min += (parseInt(device.min) * 1000);
             max += (parseInt(device.max) * 1000);
             names.push(device.name);
@@ -145,7 +145,7 @@ function fetchDataFromFRITZ() {
 
                 util.saveToFile('notify.txt', lastNotificationString);
                 if (resultString && lastNotification.valid)
-                    util.saveToFile('state.txt', resultString);
+                    util.saveToFile('state.txt', (result == null ? '[]' : resultString));//always printing empty array is better than printing null
             }, moreParam);
         }, moreParam);
     }, moreParam);
