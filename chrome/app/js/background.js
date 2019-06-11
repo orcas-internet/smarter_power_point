@@ -38,9 +38,9 @@ function checkCoffee() {
             response = [];
 
         if (response.length > 0) {
-            chrome.browserAction.setIcon({path: '../img/kitchen-16-powered.png'});
+            chrome.browserAction.setIcon({path: '../img/kitchen-128-powered.png'});
         } else {
-            chrome.browserAction.setIcon({path: '../img/kitchen-16.png'});
+            chrome.browserAction.setIcon({path: '../img/kitchen-128.png'});
         }
 
         var diff = running.diff(response);
