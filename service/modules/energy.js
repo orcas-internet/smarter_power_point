@@ -140,6 +140,11 @@ function fetchDataFromFRITZ() {
                     }
                 }
 
+                lastNotification.power = energy;
+                lastNotification.time = Date.now();
+                if (parseInt(lastNotification.power) === 0)
+                    lastNotification.level = 0;
+
                 var lastNotificationString = JSON.stringify(lastNotification);
                 var resultString = JSON.stringify(result);
 
