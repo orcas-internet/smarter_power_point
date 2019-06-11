@@ -34,6 +34,8 @@ function checkCoffee() {
     xmlhttp.open("GET", powerPoint.url);
     xmlhttp.onload = function (e) {
         var response = JSON.parse(e.target.responseText);
+        if (response == null)
+            response = [];
 
         var diff = running.diff(response);
         var diff2 = response.diff(running);

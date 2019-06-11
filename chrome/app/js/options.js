@@ -251,10 +251,10 @@ $(document).ready(function() {
         });
     });
 
-    $('#addDevBtn').on('click', addDevice);
-    $('#delDevBtn').on('click', delDevice);
-    $('#saveDevBtn').on('click', saveDevice);
-    $('#cancelDevBtn').on('click', hideDevice);
+    // $('#addDevBtn').on('click', addDevice);
+    // $('#delDevBtn').on('click', delDevice);
+    // $('#saveDevBtn').on('click', saveDevice);
+    // $('#cancelDevBtn').on('click', hideDevice);
     $('#saveBtn').on('click', save_options);
     $('#updateBtn').on('click', restore_options);
     restore_options(true);
