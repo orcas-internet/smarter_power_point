@@ -56,7 +56,7 @@ function updateDevices(e) {
                     notifications += "<option value=\"1\">Start</option>";
                     notifications += "<option value=\"2\">Fertig</option>";
                     notifications += "<option value=\"3\">Start + Fertig</option>";
-                    notifications += "</select>";
+                    notifications += "</select><br>";
                 } else {
                     DEVICES.splice(d, 1);
                     d--;
@@ -357,9 +357,34 @@ function doAuthentication() {
          if (result.username !== undefined && result.password !== undefined)
              doAuthentication();
 
-         window.setTimeout(restoreOptions, 5000, false);
+         // window.setTimeout(restoreOptions, 5000, false);
      });
  }
+
+function save_options() {
+    var data = {};
+    var ids = [];
+    var options = [];
+    $('#notifications select').each(function() {
+        var option = $(this).attr('id');
+        var id = option.substr(6);
+        ids.push(id);
+        options[id + ""] = $(this)[0].selectedIndex;
+    });
+    console.log(JSON.stringify(options));
+    data['ids'] = ids.join(",");
+    data['options'] = JSON.stringify(options);
+    chrome.storage.sync.set(data, function() {
+        // Update status to let user know options were saved.
+        var status = document.getElementById('status');
+        status.style.display = "block";
+        status.textContent = 'Optionen gespeichert.';
+        setTimeout(function() {
+            status.textContent = '';
+            status.style.display = "none";
+        }, 750);
+    });
+}
 
 $(document).ready(function() {
     $('#addDevBtn').on('click', addDevice);
@@ -367,6 +392,8 @@ $(document).ready(function() {
     $('#saveDevBtn').on('click', saveDevice);
     $('#cancelDevBtn').on('click', hideDevice);
     $('#auth-btn').on('click', doAuthentication);
+    $('#saveBtn').on('click', save_options);
+    $('#updateBtn').on('click', restoreOptions);
 
     restoreOptions();
 });
