@@ -37,6 +37,12 @@ function checkCoffee() {
         if (response == null)
             response = [];
 
+        if (response.length > 0) {
+            chrome.browserAction.setIcon({path: '../img/kitchen-16-powered.png'});
+        } else {
+            chrome.browserAction.setIcon({path: '../img/kitchen-16.png'});
+        }
+
         var diff = running.diff(response);
         var diff2 = response.diff(running);
 
