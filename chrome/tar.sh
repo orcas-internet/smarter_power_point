@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
+version=$( cat version.txt )
+
+echo "Packaging smarterPowerPoint version ${version}"
+
 cp -r app smarterPowerPoint
-rm -f smarterPowerPoint-1.0.0.tar.gz
-tar -czvf smarterPowerPoint-1.0.0.tar.gz smarterPowerPoint
+rm -f "smarterPowerPoint.tar.gz"
+tar -czf "smarterPowerPoint.tar.gz" smarterPowerPoint
 rm -r smarterPowerPoint
-mv -f smarterPowerPoint-1.0.0.tar.gz ../service/
+rm -r ../service/smarterPowerPoint*.tar.gz
+mv -f  "smarterPowerPoint.tar.gz" ../service/
