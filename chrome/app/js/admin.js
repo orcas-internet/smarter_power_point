@@ -12,11 +12,11 @@ function authenticate(url, username, sha1password) {
         if (xmlhttp.status === 200)
             authenticated = true;
         if (authenticated) {
-            $('#auth-indicator').html('Authentication Succeeded');
+            $('#auth-indicator').html('Anmeldung erfolgreich');
             $('#delDevBtn').attr('disabled', false);
             $('#addDevBtn').attr('disabled', false);
         } else {
-            $('#auth-indicator').html('Authentication Failed');
+            $('#auth-indicator').html('Anmeldung fehlgeschlagen');
             $('#delDevBtn').attr('disabled', true);
             $('#addDevBtn').attr('disabled', true);
         }
@@ -36,7 +36,6 @@ function send(aRequestType, aUrl, aCallBack, aData) {
 }
 
 function updateDevices(e) {
-    // var url = document.getElementById('input-url').value;
     console.log(e.target.responseText);
     if (e.target.responseText !== 'Created') {
         var devices = JSON.parse(e.target.responseText);
@@ -92,7 +91,6 @@ function updateDevices(e) {
 }
 
 function saveDevice() {
-    // var url = $('#input-url').val();
     if (DEVICES !== null && typeof DEVICES === 'object') {
         var id = $('#devId').val();
         var dev = null;

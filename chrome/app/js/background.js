@@ -76,7 +76,6 @@ function checkCoffee() {
 }
 
 function showNotification(element, text, sound) {
-    console.log('i want to notify the user in google chrome!!!!');
     if (sound) {
         var audio = new Audio();
         audio.src = sound;
