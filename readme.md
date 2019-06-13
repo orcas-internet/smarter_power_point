@@ -49,7 +49,10 @@ Point&quot; in chrome toolbar.
 
 Now insert the url of the nodeJS web-service (e.g. <code>http://localhost:3001/</code>) and click on &quot;Update&quot;.
 
-To add a new device click on &quot;+&quot;-Button and fill in the following **required** fields:
+To add a new device right-click the extension icon and choose 'options'. Now login with the credentials you provided in
+the service configuration (default -> user: admin, password: 1234).
+
+Now click on &quot;+&quot;-Button and fill in the following **required** fields:
 <pre>
 device name: water heater
 min. power: 1700
