@@ -6,11 +6,20 @@ var url = '';
 function authenticate(url, username, sha1password) {
     authenticated = false;
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', url, false);
+    xmlhttp.open('POST', url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
     xmlhttp.onload = () => {
         if (xmlhttp.status === 200)
             authenticated = true;
+        if (authenticated) {
+            $('#auth-indicator').html('Authentication Succeeded');
+            $('#delDevBtn').attr('disabled', false);
+            $('#addDevBtn').attr('disabled', false);
+        } else {
+            $('#auth-indicator').html('Authentication Failed');
+            $('#delDevBtn').attr('disabled', true);
+            $('#addDevBtn').attr('disabled', true);
+        }
     };
     xmlhttp.send(JSON.stringify({username: username, password: sha1password}));
 }
@@ -328,15 +337,7 @@ function doAuthentication() {
     chrome.storage.sync.set({username: username, password: password});
 
     authenticate(url + '/authenticate', username, sha1(password));
-    if (authenticated) {
-        $('#auth-indicator').html('Authentication Succeeded');
-        $('#delDevBtn').attr('disabled', false);
-        $('#addDevBtn').attr('disabled', false);
-    } else {
-        $('#auth-indicator').html('Authentication Failed');
-        $('#delDevBtn').attr('disabled', true);
-        $('#addDevBtn').attr('disabled', true);
-    }
+
  }
 
  function restoreOptions() {
